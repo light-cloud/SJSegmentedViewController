@@ -26,7 +26,7 @@ class SJSegmentView: UIScrollView {
     
     var selectedSegmentViewColor: UIColor? {
         didSet {
-            selectedSegmentView?.backgroundColor = selectedSegmentViewColor
+          selectedSegmentView?.backgroundColor = selectedSegmentViewColor
         }
     }
     
@@ -61,7 +61,6 @@ class SJSegmentView: UIScrollView {
                 layer.shadowColor = shadow.color.cgColor
                 layer.shadowRadius = shadow.radius
                 layer.shadowOpacity = shadow.opacity
-                layer.masksToBounds = false;
             }
         }
     }
@@ -78,7 +77,7 @@ class SJSegmentView: UIScrollView {
     var contentViewWidthConstraint: NSLayoutConstraint?
     var selectedSegmentViewWidthConstraint: NSLayoutConstraint?
     var contentSubViewWidthConstraints = [NSLayoutConstraint]()
-	var controllers: [UIViewController]?
+  var controllers: [UIViewController]?
     
     var contentView: SJContentView? {
         didSet {
@@ -92,15 +91,18 @@ class SJSegmentView: UIScrollView {
     required override init(frame: CGRect) {
         super.init(frame: frame)
 
-		showsHorizontalScrollIndicator = false
-		showsVerticalScrollIndicator = false
-		bounces = false
+        showsHorizontalScrollIndicator = false
+        showsVerticalScrollIndicator = false
+        bounces = false
+          
+          
+        backgroundColor = UIColor(red: 25.0 / 255.0, green: 133.0 / 255.0, blue: 155.0 / 255.0, alpha: 1.0)
 
 
-		NotificationCenter.default.addObserver(self,
-		                                       selector: #selector(SJSegmentView.didChangeSegmentIndex(_:)),
-		                                       name: NSNotification.Name("DidChangeSegmentIndex"),
-		                                       object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(SJSegmentView.didChangeSegmentIndex(_:)),
+                                               name: NSNotification.Name("DidChangeSegmentIndex"),
+                                               object: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -127,10 +129,10 @@ class SJSegmentView: UIScrollView {
         // select current button
         let index = notification.object as? Int
 
-		if index! < segments.count {
-			let button = segments[index!]
-			button.isSelected = true
-		}
+    if index! < segments.count {
+      let button = segments[index!]
+      button.isSelected = true
+    }
     }
 
     func setSegmentsView(_ frame: CGRect) {
@@ -144,6 +146,53 @@ class SJSegmentView: UIScrollView {
             createSegmentFor(controller, width: segmentWidth, index: index)
             index += 1
         }
+
+        let segmentBottomView = UIView()
+        segmentBottomView.backgroundColor = UIColor(red: 231.0 / 255.0, green: 240.0 / 255.0, blue: 242.0 / 255.0, alpha: 1.0)
+        segmentBottomView.translatesAutoresizingMaskIntoConstraints = false
+        segmentContentView!.addSubview(segmentBottomView)
+      
+      
+      
+      let leading = NSLayoutConstraint(item: segmentBottomView,
+                                           attribute: .leading,
+                                           relatedBy: .equal,
+                                           toItem: segmentContentView!,
+                                           attribute: .leading,
+                                           multiplier: 1.0,
+                                           constant: 0.0)
+      segmentContentView!.addConstraint(leading)
+      
+      
+      let trailing = NSLayoutConstraint(item: segmentBottomView,
+                                           attribute: .trailing,
+                                           relatedBy: .equal,
+                                           toItem: segmentContentView!,
+                                           attribute: .trailing,
+                                           multiplier: 1.0,
+                                           constant: 0.0)
+      segmentContentView!.addConstraint(trailing)
+      
+      
+      let bottom = NSLayoutConstraint(item: segmentBottomView,
+                                           attribute: .bottom,
+                                           relatedBy: .equal,
+                                           toItem: segmentContentView!,
+                                           attribute: .bottom,
+                                           multiplier: 1.0,
+                                           constant: 0.0)
+      segmentContentView!.addConstraint(bottom)
+      
+      
+      
+      let heightConstraint = NSLayoutConstraint(item: segmentBottomView,
+                                                attribute: .height,
+                                                relatedBy: .equal,
+                                                toItem: nil,
+                                                attribute: .notAnAttribute,
+                                                multiplier: 1, constant: 1)
+      
+      segmentContentView!.addConstraint(heightConstraint)
         
         createSelectedSegmentView(segmentWidth)
         
@@ -157,7 +206,15 @@ class SJSegmentView: UIScrollView {
         segmentContentView = UIView(frame: CGRect.zero)
         segmentContentView!.translatesAutoresizingMaskIntoConstraints = false
         addSubview(segmentContentView!)
+      
+      
+        segmentContentView!.layer.cornerRadius = 6
+        segmentContentView!.layer.maskedCorners =
+          [.layerMinXMinYCorner,
+           .layerMaxXMinYCorner]
         
+        segmentContentView!.layer.masksToBounds = true
+    
         let contentViewWidth = titleWidth * CGFloat((controllers?.count)!)
         let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[contentView]|",
                                                                                    options: [],
@@ -262,63 +319,63 @@ class SJSegmentView: UIScrollView {
     
     func getSegmentTabForController(_ controller: UIViewController) -> SJSegmentTab {
 
-		var segmentTab: SJSegmentTab?
+    var segmentTab: SJSegmentTab?
 
-		if controller.navigationItem.titleView != nil {
-			segmentTab = SJSegmentTab.init(view: controller.navigationItem.titleView!)
-		} else {
+    if controller.navigationItem.titleView != nil {
+      segmentTab = SJSegmentTab.init(view: controller.navigationItem.titleView!)
+    } else {
 
-			if let title = controller.title {
-				segmentTab = SJSegmentTab.init(title: title)
-			} else {
-				segmentTab = SJSegmentTab.init(title: "")
-			}
+      if let title = controller.title {
+        segmentTab = SJSegmentTab.init(title: title)
+      } else {
+        segmentTab = SJSegmentTab.init(title: "")
+      }
 
-			segmentTab?.backgroundColor = segmentBackgroundColor
-			segmentTab?.titleColor(titleColor!)
+      segmentTab?.backgroundColor = segmentBackgroundColor
+      segmentTab?.titleColor(titleColor!)
             segmentTab?.selectedTitleColor(selectedTitleColor!)
-			segmentTab?.titleFont(font!)
-		}
+      segmentTab?.titleFont(font!)
+    }
 
-		segmentTab?.didSelectSegmentAtIndex = didSelectSegmentAtIndex
+    segmentTab?.didSelectSegmentAtIndex = didSelectSegmentAtIndex
 
         return segmentTab!
     }
 
-	func widthForSegment(_ frame: CGRect) -> CGFloat {
+  func widthForSegment(_ frame: CGRect) -> CGFloat {
 
-		var maxWidth: CGFloat = 0
-		for controller in controllers! {
+    var maxWidth: CGFloat = 0
+    for controller in controllers! {
 
-			var width: CGFloat = 0.0
-			if let view = controller.navigationItem.titleView {
-				width = view.bounds.width
-			} else if let title = controller.title {
+      var width: CGFloat = 0.0
+      if let view = controller.navigationItem.titleView {
+        width = view.bounds.width
+      } else if let title = controller.title {
 
-				width = title.widthWithConstrainedWidth(.greatestFiniteMagnitude,
-				                                        font: font!)
-			}
+        width = title.widthWithConstrainedWidth(.greatestFiniteMagnitude,
+                                                font: font!)
+      }
 
-			if width > maxWidth {
-				maxWidth = width
-			}
-		}
+      if width > maxWidth {
+        maxWidth = width
+      }
+    }
 
-		let width = Int(maxWidth + segmentViewOffsetWidth)
-		let totalWidth = width * (controllers?.count)!
-		if totalWidth < Int(frame.size.width)  {
-			maxWidth = frame.size.width /  CGFloat((controllers?.count)!)
-		} else {
-			maxWidth = CGFloat(width)
-		}
+    let width = Int(maxWidth + segmentViewOffsetWidth)
+    let totalWidth = width * (controllers?.count)!
+    if totalWidth < Int(frame.size.width)  {
+      maxWidth = frame.size.width /  CGFloat((controllers?.count)!)
+    } else {
+      maxWidth = CGFloat(width)
+    }
 
-		return maxWidth
-	}
+    return maxWidth
+  }
     
-	override func observeValue(forKeyPath keyPath: String?,
-	                           of object: Any?,
-	                           change: [NSKeyValueChangeKey : Any]?,
-	                           context: UnsafeMutableRawPointer?) {
+  override func observeValue(forKeyPath keyPath: String?,
+                             of object: Any?,
+                             change: [NSKeyValueChangeKey : Any]?,
+                             context: UnsafeMutableRawPointer?) {
         
         if let change = change as [NSKeyValueChangeKey : AnyObject]? {
             if let old = change[NSKeyValueChangeKey.oldKey], let new = change[NSKeyValueChangeKey.newKey] {
