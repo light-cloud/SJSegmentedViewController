@@ -285,37 +285,86 @@ class SJSegmentView: UIScrollView {
         segments.append(segmentView)
     }
     
-    func createSelectedSegmentView(_ width: CGFloat) {
-        
-        let segmentView = UIView()
-        segmentView.backgroundColor = selectedSegmentViewColor
-        segmentView.translatesAutoresizingMaskIntoConstraints = false
-        segmentContentView!.addSubview(segmentView)
-        selectedSegmentView = segmentView
-        
-        xPosConstraints = NSLayoutConstraint(item: segmentView,
-                                             attribute: .leading,
-                                             relatedBy: .equal,
-                                             toItem: segmentContentView!,
-                                             attribute: .leading,
-                                             multiplier: 1.0,
-                                             constant: 0.0)
-        segmentContentView!.addConstraint(xPosConstraints!)
-        
-        let segment = segments.first
-        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[view(==segment)]",
-                                                                                   options: [],
-                                                                                   metrics: nil,
-                                                                                   views: ["view": segmentView,
-                                                                                    "segment": segment!])
-        segmentContentView!.addConstraints(horizontalConstraints)
-        
-        let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[view(height)]|",
+  func createSelectedSegmentView(_ width: CGFloat) {
+      
+      let segmentView = UIView()
+    segmentView.backgroundColor = .clear
+      segmentView.translatesAutoresizingMaskIntoConstraints = false
+    
+    let innerSegmentView = UIView()
+    innerSegmentView.backgroundColor = selectedSegmentViewColor
+    innerSegmentView.translatesAutoresizingMaskIntoConstraints = false
+    segmentView.addSubview(innerSegmentView)
+    
+    
+    let top = NSLayoutConstraint(item: innerSegmentView,
+                                         attribute: .top,
+                                         relatedBy: .equal,
+                                         toItem: segmentView,
+                                         attribute: .top,
+                                         multiplier: 1.0,
+                                         constant: 0.0)
+    segmentView.addConstraint(top)
+    
+    
+    let leading = NSLayoutConstraint(item: innerSegmentView,
+                                         attribute: .leading,
+                                         relatedBy: .equal,
+                                         toItem: segmentView,
+                                         attribute: .leading,
+                                         multiplier: 1.0,
+                                         constant: 8.0)
+    segmentView.addConstraint(leading)
+    
+    
+    let trailing = NSLayoutConstraint(item: innerSegmentView,
+                                         attribute: .trailing,
+                                         relatedBy: .equal,
+                                         toItem: segmentView,
+                                         attribute: .trailing,
+                                         multiplier: 1.0,
+                                         constant: -8.0)
+    segmentView.addConstraint(trailing)
+    
+    
+    let bottom = NSLayoutConstraint(item: innerSegmentView,
+                                         attribute: .bottom,
+                                         relatedBy: .equal,
+                                         toItem: segmentView,
+                                         attribute: .bottom,
+                                         multiplier: 1.0,
+                                         constant: 0.0)
+    segmentView.addConstraint(bottom)
+    
+    
+    
+    
+      segmentContentView!.addSubview(segmentView)
+      selectedSegmentView = segmentView
+      
+      xPosConstraints = NSLayoutConstraint(item: segmentView,
+                                           attribute: .leading,
+                                           relatedBy: .equal,
+                                           toItem: segmentContentView!,
+                                           attribute: .leading,
+                                           multiplier: 1.0,
+                                           constant: 0.0)
+      segmentContentView!.addConstraint(xPosConstraints!)
+      
+      let segment = segments.first
+      let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[view(==segment)]",
                                                                                  options: [],
-                                                                                 metrics: ["height": selectedSegmentViewHeight!],
-                                                                                 views: ["view": segmentView])
-        segmentContentView!.addConstraints(verticalConstraints)
-    }
+                                                                                 metrics: nil,
+                                                                                 views: ["view": segmentView,
+                                                                                  "segment": segment!])
+      segmentContentView!.addConstraints(horizontalConstraints)
+      
+      let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[view(height)]|",
+                                                                               options: [],
+                                                                               metrics: ["height": selectedSegmentViewHeight!],
+                                                                               views: ["view": segmentView])
+      segmentContentView!.addConstraints(verticalConstraints)
+  }
     
     func getSegmentTabForController(_ controller: UIViewController) -> SJSegmentTab {
 
