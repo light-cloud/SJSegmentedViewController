@@ -130,6 +130,8 @@ public class SJSegmentedScrollView: UIScrollView {
         showsVerticalScrollIndicator = sjShowsVerticalScrollIndicator
         decelerationRate = .fast
         bounces = false
+      
+        delaysContentTouches = false
         
         addObserver(self, forKeyPath: "contentOffset",
                          options: [NSKeyValueObservingOptions.new, NSKeyValueObservingOptions.old],
